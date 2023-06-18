@@ -1,6 +1,10 @@
 [workspace]
 members = ["egui-directx9", "egui-directx11", "egui-win32"]
 
+
+[workspace.metadata]
+license = "MIT"
+
 [workspace.dependencies]
 windows = "0.48.0"
 egui = "0.22.0"
