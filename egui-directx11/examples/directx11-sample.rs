@@ -111,7 +111,6 @@ fn main() -> Result<()> {
 
         Event::RedrawRequested(_) => {
             // collect input here
-
             let input = egui::RawInput::default();
             dx_renderer
                 .paint(&swapchain, &mut shared_state, input, |ctx, state| {

@@ -12,5 +12,4 @@ windows = { workspace = true, features = [
     "Win32_Foundation",
     "Win32_UI_Input_KeyboardAndMouse",
 ] }
-
 clipboard-win = "4.5.0"
