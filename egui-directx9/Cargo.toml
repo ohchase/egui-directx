@@ -1,0 +1,17 @@
+[package]
+name = "egui-directx9"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+egui = { workspace = true }
+windows = { workspace = true, features = [
+    "Win32_Foundation",
+    "Foundation_Numerics",
+    "Win32_Graphics_Direct3D",
+    "Win32_Graphics_Direct3D9",
+    "Win32_Graphics_Dxgi",
+    "Win32_System_SystemServices",
+] }
