@@ -6,7 +6,7 @@ use crate::{
     RenderError,
 };
 use egui::{epaint::Primitive, Context};
-use std::{marker::PhantomData, mem::size_of};
+use std::mem::size_of;
 use windows::{
     core::HRESULT,
     s,
@@ -40,7 +40,7 @@ use windows::{
 /// * [`Self::present`] - Should be called inside of hook or before present.
 /// * [`Self::resize_buffers`] - Should be called **INSTEAD** of swapchain's `ResizeBuffers`.
 /// * [`Self::wnd_proc`] - Should be called on each `WndProc`.
-pub struct DirectX11Renderer<T> {
+pub struct DirectX11Renderer {
     render_view: Option<ID3D11RenderTargetView>,
     tex_alloc: TextureAllocator,
     input_layout: ID3D11InputLayout,
@@ -48,11 +48,9 @@ pub struct DirectX11Renderer<T> {
     backup: BackupState,
     hwnd: HWND,
     context: egui::Context,
-
-    _state_type: PhantomData<T>,
 }
 
-impl<T> DirectX11Renderer<T> {
+impl DirectX11Renderer {
     const INPUT_ELEMENTS_DESC: [D3D11_INPUT_ELEMENT_DESC; 3] = [
         D3D11_INPUT_ELEMENT_DESC {
             SemanticName: s!("POSITION"),
@@ -84,12 +82,11 @@ impl<T> DirectX11Renderer<T> {
     ];
 }
 
-impl<T> DirectX11Renderer<T> {
+impl DirectX11Renderer {
     /// Create a new directx11 renderer from a swapchain
     pub fn init_from_swapchain(
         swapchain: &IDXGISwapChain,
         context: egui::Context,
-        // state: T,
     ) -> Result<Self, RenderError> {
         unsafe {
             let mut swap_chain_desc = DXGI_SWAP_CHAIN_DESC::default();
@@ -125,24 +122,23 @@ impl<T> DirectX11Renderer<T> {
                 shaders,
                 hwnd,
                 context,
-                _state_type: PhantomData,
             })
         }
     }
 }
 
-impl<T> DirectX11Renderer<T> {
+impl DirectX11Renderer {
     /// Present call. Should be called once per original present call, before or inside of hook.
     #[allow(clippy::cast_ref_to_mut)]
-    pub fn paint<R>(
+    pub fn paint<PaintFn, State>(
         &mut self,
         swap_chain: &IDXGISwapChain,
-        shared_state: &mut T,
+        shared_state: &mut State,
         input: egui::RawInput,
-        paint: R,
+        paint: PaintFn,
     ) -> Result<(), RenderError>
     where
-        R: Fn(&Context, &mut T) + 'static,
+        PaintFn: Fn(&Context, &mut State) + 'static,
     {
         unsafe {
             let (dev, ctx) = &get_device_and_context(swap_chain)?;
@@ -239,7 +235,7 @@ impl<T> DirectX11Renderer<T> {
     }
 }
 
-impl<T> DirectX11Renderer<T> {
+impl DirectX11Renderer {
     #[inline]
     fn get_screen_size(&self) -> (f32, f32) {
         let mut rect = RECT::default();

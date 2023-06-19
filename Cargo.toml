@@ -1,5 +1,5 @@
 [workspace]
-members = ["egui-directx9", "egui-directx11", "egui-win32"]
+members = ["egui-directx9", "egui-directx11", "egui-directx12", "egui-win32"]
 
 
 [workspace.metadata]

@@ -101,7 +101,7 @@ fn main() -> Result<()> {
         counter: u32,
     }
     let mut shared_state = State { counter: 5 };
-    let mut dx_renderer: DirectX11Renderer<State> =
+    let mut dx_renderer: DirectX11Renderer =
         DirectX11Renderer::init_from_swapchain(&swapchain, egui::Context::default())?;
 
     event_loop.run(move |event, _, control_flow| match event {
